@@ -1,4 +1,6 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/d202d4e491a86484220d8fb286445dff3a136e0f.tar.gz") {}
+, android ? import (fetchTarball "https://github.com/tadfisher/android-nixpkgs/archive/29bb40c63fea9ab6a27008962c7d8ac57d572f51.tar.gz") {}
+}:
 
 with pkgs;
 
