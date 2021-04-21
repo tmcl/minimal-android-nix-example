@@ -106,4 +106,16 @@ have included an additional repo that solves a version mismatch from when
 I wrote this up, that I didn't experience when actually trying to make it
 work in the first place.)
 
-Now we can commit and rebuild; this time it gets to builtWithGradle. 
+Now we can commit and rebuild; this time it gets to builtWithGradle. This
+time it fails because of a difference in code layout. Go to build.nix and
+point it to the sources.
+
+```nix
+stdenv.mkDerivation {
+  pname = "built-with-gradle";
+  version = "0.0";
+
+  src = ../android;
+  ...
+}
+```
