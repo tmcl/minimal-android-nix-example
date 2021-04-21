@@ -4,7 +4,18 @@
 
 with pkgs;
 
-lib.makeScope newScope (self: with self; {
+let
+  androidSdk = android.sdk (sdkPkgs: with sdkPkgs; [
+    cmdline-tools-latest
+    build-tools-30-0-3
+    platform-tools
+    platforms-android-30
+    emulator
+  ]);
+
+in lib.makeScope newScope (self: with self; {
+  inherit androidSdk;
+
   gradle = gradle_6;
 
   updateLocks = callPackage ./update-locks.nix {

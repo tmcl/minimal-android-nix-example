@@ -157,3 +157,29 @@ see if it has been defined and, if so, to use it (twice):
 
 (I also converted the file to kts, but I'm quite sure that's unnecessary.
 I might change it back because I don't know how to register the task...)
+
+Now, if you buld it, you will begin to configure. But it crashes because
+the Android SDK isn't available. That is easy enough to add:
+
+with default.nix:
+
+```nix
+let
+  androidSdk = android.sdk (sdkPkgs: with sdkPkgs; [
+    cmdline-tools-latest
+    build-tools-30-0-3
+    platform-tools
+    platforms-android-30
+    emulator
+  ]);
+
+in lib.makeScope newScope (self: with self; {
+  inherit androidSdk;
+  ...
+```
+
+and build.nix, under `JDK_HOME`:
+
+```nix
+  ANDROID_SDK_ROOT = "${androidSdk}/share/android-sdk";
+```

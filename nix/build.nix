@@ -3,6 +3,7 @@
 , jdk
 , gradle
 , mavenRepo
+, androidSdk
 }:
 
 stdenv.mkDerivation {
@@ -14,6 +15,8 @@ stdenv.mkDerivation {
   nativeBuildInputs = [ gradle ];
   
   JDK_HOME = "${jdk.home}";
+  ANDROID_SDK_ROOT = "${androidSdk}/share/android-sdk";
+
   
   buildPhase = ''
     runHook preBuild
