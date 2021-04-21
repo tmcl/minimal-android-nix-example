@@ -18,9 +18,9 @@ stdenv.mkDerivation {
   buildPhase = ''
     runHook preBuild
     gradle build \
-      --offline --no-daemon --no-build-cache --info --full-stacktrace \
+       --no-daemon --no-build-cache --info --full-stacktrace \
       --warning-mode=all --parallel --console=plain \
-      -DnixMavenRepo=file://${mavenRepo}
+      -PnixMavenRepo=file://${mavenRepo}
     runHook postBuild
   '';
   

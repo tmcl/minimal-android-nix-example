@@ -119,3 +119,41 @@ stdenv.mkDerivation {
   ...
 }
 ```
+
+Now it fails because it can't find its dependencies and wants to download
+its dependencies, but the nix sandbox won't let it. We have built a local
+repo, but not pointed it to it. If you want to build this by hand, we can
+just add mavenLocal() before google():
+
+```gradle
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+    }
+```
+
+and change the build.nix file to use -Dmaven.repo.local=${mavenRepo}, but
+for whatever reason maven seems to ignore the local repo settings when it
+is used by system users. Or something. Tadfisher provided some tools that
+should read a property -DnixMavenRepo. I have very limited skills, and so
+I struggled to get it to work. Instead, I have used -PnixMavenRepo in the
+build.nix file and substituted  the simple repo code above with a test to
+see if it has been defined and, if so, to use it (twice):
+
+```kotlin
+    val nixMavenRepo = project.findProperty("nixMavenRepo")
+    if(nixMavenRepo != null) {
+      repositories {
+          maven(nixMavenRepo)
+      }
+    } else {
+      repositories {
+          google()
+          mavenCentral()
+      }
+    }
+```
+
+(I also converted the file to kts, but I'm quite sure that's unnecessary.
+I might change it back because I don't know how to register the task...)
