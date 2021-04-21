@@ -39,3 +39,19 @@ tadfisher/android-nixpkgs to give us access to the SDK. Instead of taking
 a custom build of gradle, we just use the nixpkgs gradle\_6 package since
 Android Studio has generated code for gradle 6 which is incompatible with
 gradle 7. (It uses 6.5; but nixpkg's 6.8 is close enough.)
+
+If you run `nix-build default.nix` now, it will error because it wants to
+import deps.json. This file is produced by `updateLocks`, which builds an
+executable. If you run it `./result/bin/update-locks`, it fails. Firstly,
+the pwd when it runs needs to be our gradle/Android project: 
+
+```bash
+cd ../android
+../nix/result/bin/update-locks
+```
+
+Secondly, it runs `gradle lock`, which is not a provided/builtin task. No
+problem, we can simply change it to use the builtin `gradle dependencies` 
+instead. Then rebuild it, go back to `../android` and run it as above and 
+you get a `deps.json`. Move it back to `../nix` and review the commit.
+
