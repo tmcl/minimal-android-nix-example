@@ -9,7 +9,7 @@ by [this gist](https://gist.github.com/tadfisher/17000caf8653019a9a98fd9b9b921d9
 The first thing to do, then, is to grab android-studio:
 
 ```bash
-NIXPKGS_ALLOW_UNFREE=1 nix-shell -p android-studio
+NIXPKGS_ALLOW_UNFREE=1 nix-shell -p android-studio --pure
 android-studio
 ```
 
@@ -27,4 +27,15 @@ motivated to write an Android app because it was about that time the apps
 I like started breaking. Here I've been daring and chosen 24. When you've
 made your choices, press "Finish".
 
-Android Studio generate a bunch of files.
+Android Studio will generate a bunch of files. Then I added everything to
+git and closed it. From now on, we will be working without it.
+
+In an adjacent folder, I created several files based on, but not the same
+as, the files from tadfisher's gists. I will discuss each file along with
+what changes I made. You can follow on by looking at the diffs. 
+
+The first is `nix/default.nix`. First, I need to pin nixpkgs and also add
+tadfisher/android-nixpkgs to give us access to the SDK. Instead of taking
+a custom build of gradle, we just use the nixpkgs gradle\_6 package since
+Android Studio has generated code for gradle 6 which is incompatible with
+gradle 7. (It uses 6.5; but nixpkg's 6.8 is close enough.)

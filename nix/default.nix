@@ -5,7 +5,7 @@
 with pkgs;
 
 lib.makeScope newScope (self: with self; {
-  gradle = callPackage ./gradle.nix { };
+  gradle = gradle_6;
 
   updateLocks = callPackage ./update-locks.nix {
     inherit (haskellPackages) xml-to-json;
