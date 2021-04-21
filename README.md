@@ -46,8 +46,9 @@ executable. If you run it `./result/bin/update-locks`, it fails. Firstly,
 the pwd when it runs needs to be our gradle/Android project: 
 
 ```bash
-cd ../android
-../nix/result/bin/update-locks
+../nix% nix-build default.nix --attr update-locks
+../nix% cd ../android
+../android% ../nix/result/bin/update-locks
 ```
 
 Secondly, it runs `gradle lock`, which is not a provided/builtin task. No
@@ -55,3 +56,54 @@ problem, we can simply change it to use the builtin `gradle dependencies`
 instead. Then rebuild it, go back to `../android` and run it as above and 
 you get a `deps.json`. Move it back to `../nix` and review the commit.
 
+Now we are good to try and run our main `nix-build default.nix` again:
+
+```bash
+../nix% nix-build default.nix 
+```
+
+This deps.json file contains a reference to all our android dependencies. 
+It has their names and sha224 sums, but it doesn't tell us where they are
+downloaded from. Therefore, we get another failure. In default.nix, there
+is a call to maven-repo.nix, which supplies references to the maven repos 
+that it looks at to find the dependencies. You can compare these repos to
+the repositories mentioned in ../android/build.gradle: build.gradle looks
+at (twice):
+
+```gradle
+    repositories {
+        google()
+        jcenter()
+    }
+```
+
+JCenter is going to be closed and when you build this, it will advise you
+to replace it with mavenCentral(). Maven Central is repo1.maven so we can
+use that in our build.gradle file (twice) and add the google repo: 
+
+
+```gradle
+    repositories {
+        google()
+        mavenCentral()
+    }
+```
+
+```nix
+    repos = [
+      "https://dl.google.com/dl/android/maven2"
+      "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev"
+      "https://plugins.gradle.org/m2"
+      "https://repo1.maven.org/maven2"
+    ];
+```
+
+The order is significant: Java builds are not very reproducible thus when 
+the same package is included in two repos they are sufficiently likely to 
+have two different SHA224. (Also, JetBrains artefacts might be downloaded
+and shared as part of the IDE. These can be found by general sleuthing. I
+have included an additional repo that solves a version mismatch from when
+I wrote this up, that I didn't experience when actually trying to make it
+work in the first place.)
+
+Now we can commit and rebuild; this time it gets to builtWithGradle. 
