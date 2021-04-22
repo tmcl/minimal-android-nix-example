@@ -21,7 +21,7 @@ stdenv.mkDerivation {
   buildPhase = ''
     runHook preBuild
     gradle build \
-       --no-daemon --no-build-cache --info --full-stacktrace \
+      --offline --no-daemon --no-build-cache --info --full-stacktrace \
       --warning-mode=all --parallel --console=plain \
       -PnixMavenRepo=${mavenRepo} \
       -Dorg.gradle.project.android.aapt2FromMavenOverride=$ANDROID_SDK_ROOT/build-tools/30.0.3/aapt2
@@ -31,7 +31,7 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p $out
-    cp -r build/dist/* $out
+    cp -r app/build/outputs/* $out
     runHook postInstall
   '';
   

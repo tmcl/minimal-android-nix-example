@@ -202,3 +202,7 @@ we need to tell gradle to use the NixOS version during the build phase:
 
 Since the Android SDK is already a dependency, we don't need to add make
 any other changes.
+
+Now it should build. It will not install properly though, because nix is
+looking for its output in build/dist instead of app/build/outputs. It is
+easy enough to fix this, and then you get your builds!
