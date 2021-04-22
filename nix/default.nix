@@ -28,9 +28,9 @@ in lib.makeScope newScope (self: with self; {
     name = "nix-maven-repo";
     repos = [
       "https://dl.google.com/dl/android/maven2"
+      "https://repo1.maven.org/maven2"
       "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev"
       "https://plugins.gradle.org/m2"
-      "https://repo1.maven.org/maven2"
     ];
     deps = builtins.fromJSON (builtins.readFile ./deps.json);
   };
