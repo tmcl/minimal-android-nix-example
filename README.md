@@ -183,3 +183,22 @@ and build.nix, under `JDK_HOME`:
 ```nix
   ANDROID_SDK_ROOT = "${androidSdk}/share/android-sdk";
 ```
+
+Now, we get a build failure because the built-in aapt2 program looks for
+various libraries in standard locations, but NixOS doesn't have them. So
+we need to tell gradle to use the NixOS version during the build phase:
+
+```nix
+  buildPhase = ''
+    runHook preBuild
+    gradle build \
+       --no-daemon --no-build-cache --info --full-stacktrace \
+      --warning-mode=all --parallel --console=plain \
+      -PnixMavenRepo=file://${mavenRepo} \
+      -Dorg.gradle.project.android.aapt2FromMavenOverride=$ANDROID_SDK_ROOT/build-tools/30.0.3/aapt2
+    runHook postBuild
+  '';
+```
+
+Since the Android SDK is already a dependency, we don't need to add make
+any other changes.

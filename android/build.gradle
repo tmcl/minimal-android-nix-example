@@ -1,10 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    val kotlin_version by extra ( "1.4.32" )
-    val nixMavenRepo = project.findProperty("nixMavenRepo")
+    ext.kotlin_version = "1.4.32" 
     if(nixMavenRepo != null) {
       repositories {
-          maven(nixMavenRepo)
+          maven { url = nixMavenRepo }
       }
     } else {
       repositories {
@@ -23,10 +22,9 @@ buildscript {
 }
 
 allprojects {
-    val nixMavenRepo = project.findProperty("nixMavenRepo")
     if(nixMavenRepo != null) {
       repositories {
-          maven(nixMavenRepo)
+          maven { url = nixMavenRepo }
       }
     } else {
       repositories {
