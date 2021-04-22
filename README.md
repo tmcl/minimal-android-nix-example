@@ -3,7 +3,7 @@ A minimal Android/Nix example
 
 This draws entirely on the work of github.com/tadfisher, who basically did
 all the work and almost documented it. Consider this a tutorial in one way
-to use their stuff. Most significantly, I using android-nixpkgs and guided
+to use their stuff. Most significantly, I used tadfisher/android-nixpkgs and guided
 by [this gist](https://gist.github.com/tadfisher/17000caf8653019a9a98fd9b9b921d93).
 
 This should be usable by:
